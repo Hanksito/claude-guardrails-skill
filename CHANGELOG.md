@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] — 2026-06-05
+
+Publishable to npm for a no-clone install.
+
+### Added
+- **`npx claude-guardrails-skill`** — the installer is now an npm `bin`. `install.js` carries a
+  `#!/usr/bin/env node` shebang and `package.json` declares `bin`, `files`, `engines`, and repo
+  metadata, so the whole stack installs with one command without cloning.
+- `prepublishOnly` runs the test suite before any `npm publish`.
+- Packaging guard tests (`test/packaging.test.js`).
+
 ## [0.3.0] — 2026-06-05
 
 True one-command install.
@@ -67,6 +78,7 @@ First release.
 - `superpowers` is a prerequisite and is installed separately (not by `install.js`).
 - 25/25 tests passing (`node --test`).
 
+[0.4.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.1.0

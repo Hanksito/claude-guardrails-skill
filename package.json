@@ -1,9 +1,41 @@
 {
   "name": "claude-guardrails-skill",
-  "version": "0.3.0",
-  "description": "Guardrail pack: long-term memory discipline, fact verification, and a self-registering session-start reminder for Claude.",
-  "license": "MIT",
+  "version": "0.4.0",
+  "description": "One-command installer for the claude-guardrails-skill pack: long-term memory discipline, fact verification, a self-registering session-start reminder, and the skills it coordinates.",
+  "bin": {
+    "claude-guardrails-skill": "install.js"
+  },
+  "files": [
+    "install.js",
+    "lib/",
+    "deps.json",
+    "INSTALL.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "test": "node --test"
-  }
+    "test": "node --test",
+    "prepublishOnly": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hanksito/claude-guardrails-skill.git"
+  },
+  "homepage": "https://github.com/Hanksito/claude-guardrails-skill#readme",
+  "bugs": {
+    "url": "https://github.com/Hanksito/claude-guardrails-skill/issues"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "agent-skills",
+    "memory",
+    "context",
+    "verification",
+    "guardrails",
+    "installer"
+  ],
+  "author": "Martin Barja Balseiro <barjabalseiro@gmail.com> (https://github.com/Hanksito)",
+  "license": "MIT"
 }

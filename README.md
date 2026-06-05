@@ -8,11 +8,12 @@
 
 *Guardrails that make Claude remember what matters, keep the thread on long tasks, and never make facts up — installed in one command, then out of your way.*
 
+![npm](https://img.shields.io/npm/v/claude-guardrails-skill)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node](https://img.shields.io/badge/node-%E2%89%A518-blue)
 ![Runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-win%20%7C%20macOS%20%7C%20linux-lightgrey)
-![Tests](https://img.shields.io/badge/tests-20%20passing-success)
+![Tests](https://img.shields.io/badge/tests-23%20passing-success)
 
 </div>
 
@@ -82,6 +83,12 @@ The biggest source of agent confusion is *where to write what*. This pack draws 
 **One command installs everything** — superpowers, planning-with-files, caveman, the two skills, and this plugin (hook included).
 
 **Requires** [Claude Code](https://claude.com/claude-code) (`claude` on PATH) and [Node.js](https://nodejs.org) ≥ 18.
+
+```bash
+npx claude-guardrails-skill
+```
+
+…or from a clone:
 
 ```bash
 git clone https://github.com/Hanksito/claude-guardrails-skill
@@ -181,8 +188,8 @@ node --test
 ```
 
 ```text
-ℹ tests 20
-ℹ pass 20
+ℹ tests 23
+ℹ pass 23
 ℹ fail 0
 ```
 

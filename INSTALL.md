@@ -10,13 +10,21 @@ and this plugin (with its self-registering reminder hook).
 
 ## Install
 
+The fastest way — no clone needed:
+
+```bash
+npx claude-guardrails-skill
+```
+
+Or from a clone:
+
 ```bash
 git clone https://github.com/Hanksito/claude-guardrails-skill
 cd claude-guardrails-skill
 node install.js
 ```
 
-That's it. The installer:
+Either way, the installer:
 
 1. Adds this repo's marketplace and installs the plugins **in order** via the `claude` CLI —
    `superpowers` → `planning-with-files` → `caveman` → `claude-guardrails-skill`.
