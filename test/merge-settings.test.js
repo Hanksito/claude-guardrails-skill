@@ -35,3 +35,16 @@ test('preserves other top-level settings keys', () => {
   assert.strictEqual(out.model, 'opus');
   assert.ok(Array.isArray(out.hooks.Stop));
 });
+
+test('does not mutate the input settings (pure)', () => {
+  const input = { model: 'opus' };
+  const out = ensureSessionStartHook(input, CMD);
+  assert.notStrictEqual(out, input);
+  assert.strictEqual(input.hooks, undefined);
+});
+
+test('dedupes against a flat-format hook carrying the marker', () => {
+  const flat = { hooks: { SessionStart: [{ type: 'command', command: 'node "/x.js" claude-guardrails-sessionstart' }] } };
+  const out = ensureSessionStartHook(flat, CMD);
+  assert.strictEqual(out.hooks.SessionStart.length, 1);
+});

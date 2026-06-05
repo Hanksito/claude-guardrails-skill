@@ -21,3 +21,9 @@ test('hook script prints the reminder to stdout', () => {
   assert.strictEqual(res.status, 0);
   assert.match(res.stdout, /claude-guardrails/);
 });
+
+test('hook script ignores the extra marker-token argv and still prints', () => {
+  const res = spawnSync(process.execPath, [path.join(__dirname, '..', 'hooks', 'session-start.js'), 'claude-guardrails-sessionstart'], { encoding: 'utf8' });
+  assert.strictEqual(res.status, 0);
+  assert.match(res.stdout, /claude-guardrails/);
+});

@@ -31,6 +31,7 @@ function readSettings(file) {
 
 function main(argv) {
   const dryRun = argv.includes('--dry-run');
+  process.stdout.write('Note: superpowers is a prerequisite and is NOT installed by this script — install it from its own marketplace (see INSTALL.md).\n');
   const deps = JSON.parse(fs.readFileSync(path.join(__dirname, 'deps.json'), 'utf8'));
   const cmds = buildCommands(deps);
   const hookCmd = hookCommand();
