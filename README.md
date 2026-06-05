@@ -12,7 +12,7 @@
 ![Node](https://img.shields.io/badge/node-%E2%89%A518-blue)
 ![Runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-win%20%7C%20macOS%20%7C%20linux-lightgrey)
-![Tests](https://img.shields.io/badge/tests-25%20passing-success)
+![Tests](https://img.shields.io/badge/tests-18%20passing-success)
 
 </div>
 
@@ -41,14 +41,15 @@ Three failure modes quietly wreck agentic coding sessions:
 
 **Four coordinated dependencies, installed for you:**
 
-| Skill | Role |
-|-------|------|
-| [`planning-with-files`](https://github.com/OthmanAdi/planning-with-files) | Live working memory on disk — survives context compaction & `/clear`. |
-| [`caveman`](https://github.com/JuliusBrussee/caveman) | Terse, low-token communication style (**lite**, always on). |
-| [`find-skills`](https://github.com/vercel-labs/skills) | Discover new skills across the ecosystem. |
-| [`skill-judge`](https://github.com/softaworks/agent-toolkit) | Evaluate skills *before* you install them. |
+| Skill / Plugin | Role | Installs via |
+|----------------|------|--------------|
+| [`superpowers`](https://github.com/obra/superpowers) | Method base: TDD, debugging, planning, code review, `verification-before-completion`. | marketplace |
+| [`planning-with-files`](https://github.com/OthmanAdi/planning-with-files) | Live working memory on disk — survives context compaction & `/clear`. | marketplace |
+| [`caveman`](https://github.com/JuliusBrussee/caveman) | Terse, low-token communication style (**lite**, always on). | marketplace |
+| [`find-skills`](https://github.com/vercel-labs/skills) | Discover new skills across the ecosystem. | `install.js` |
+| [`skill-judge`](https://github.com/softaworks/agent-toolkit) | Evaluate skills *before* you install them. | `install.js` |
 
-> **Prerequisite:** [`superpowers`](https://github.com/obra/superpowers) provides the method base (TDD, debugging, `writing-plans`, `verification-before-completion`). Install it from its own marketplace first.
+> **One install surface.** `superpowers` and the other plugins are re-listed in this repo's marketplace, so a single `/plugin marketplace add` gives you everything — no separate marketplaces to track.
 
 ---
 
@@ -78,67 +79,61 @@ The biggest source of agent confusion is *where to write what*. This pack draws 
 
 ## Quick start
 
-### 1. Install the prerequisite (once)
+Everything installs from **one marketplace** — including `superpowers`, so you never add its marketplace separately.
 
-Install [`superpowers`](https://github.com/obra/superpowers) from its marketplace if you don't have it.
-
-### 2. Add the plugin
+### 1. Add the marketplace (once)
 
 ```text
 /plugin marketplace add https://github.com/Hanksito/claude-guardrails-skill
+```
+
+### 2. Install the plugins from it
+
+```text
 /plugin install claude-guardrails-skill
+/plugin install superpowers
+/plugin install planning-with-files
+/plugin install caveman
 ```
 
-### 3. Run the installer
+Installing `claude-guardrails-skill` brings the two skills **and self-registers its SessionStart reminder hook** — no `settings.json` editing, nothing to wire up.
 
-From the installed plugin directory (the plugin manager prints the path):
+### 3. Add the two skill-only tools
 
-```bash
-node install.js
-```
-
-This will:
-- install the four dependency skills via `npx skills add`, and
-- register the **SessionStart** reminder hook in `~/.claude/settings.json`.
-
-**Preview first — change nothing:**
+`find-skills` and `skill-judge` ship as bare skills (not plugins), so they install with the `skills` CLI. From the plugin directory:
 
 ```bash
-node install.js --dry-run
+node install.js          # or: node install.js --dry-run
 ```
 
 ```text
-Note: superpowers is a prerequisite and is NOT installed by this script — install it from its own marketplace (see INSTALL.md).
-npx skills add https://github.com/OthmanAdi/planning-with-files --skill planning-with-files
-npx skills add https://github.com/JuliusBrussee/caveman --skill caveman
 npx skills add https://github.com/vercel-labs/skills --skill find-skills
 npx skills add https://github.com/softaworks/agent-toolkit --skill skill-judge
-SessionStart hook -> /home/you/.claude/settings.json
-  node "/.../claude-guardrails-skill/hooks/session-start.js" claude-guardrails-sessionstart
 ```
 
-> ♻️ **Safe to re-run.** The installer is idempotent — running it again never duplicates the hook (it matches a stable marker token, not a fragile path).
+> 🪶 **Nothing is vendored.** `superpowers`, `planning-with-files`, and `caveman` are *re-listed* in this marketplace and pulled from their own repos — you get one install surface without copying anyone's code.
 
 ---
 
 ## How it works under the hood
 
 ```
-                    ┌──────────────────────┐
-   session starts ─▶│  SessionStart hook   │─▶ injects a 3-line reminder:
-                    │  session-start.js    │   memory layers · verify-facts · caveman
-                    └──────────────────────┘
-                              ▲
-                              │ registered by (idempotent)
-                    ┌──────────────────────┐
-                    │      install.js      │─▶ npx skills add ×4  (dependencies)
-                    │  (Node, no deps)     │─▶ merge SessionStart hook → settings.json
-                    └──────────────────────┘
+   /plugin install claude-guardrails-skill
+                    │
+                    ├─▶ skills/   memory-discipline · verify-facts
+                    │
+                    └─▶ hooks/hooks.json  ──auto-registers──▶  SessionStart hook
+                                                               (node hooks/session-start.js)
+                                                                       │
+                                              session starts ─────────▶│
+                                                                       ▼
+                                                  injects a 3-line reminder:
+                                                  memory layers · verify-facts · caveman
 ```
 
-- **Zero hardcoded paths.** The hook path is resolved at install time from the real install location, so the same repo works on any machine.
-- **Cross-platform, zero runtime dependencies.** Pure Node built-ins — runs the same on Windows, macOS, and Linux.
-- **Idempotency by marker token.** The hook command carries an inert `claude-guardrails-sessionstart` argv token; re-installs recognize it regardless of where the plugin lives.
+- **Self-registering hook.** The reminder is declared in `hooks/hooks.json` and wired up by the plugin loader via `${CLAUDE_PLUGIN_ROOT}` — no `settings.json` mutation, and it's removed automatically on uninstall.
+- **Nothing vendored.** Dependency plugins are re-listed in the marketplace and fetched from their own repos.
+- **Cross-platform, zero runtime dependencies.** Pure Node built-ins — Windows, macOS, and Linux alike.
 
 ---
 
@@ -160,19 +155,19 @@ normal mode      # or: stop caveman
 claude-guardrails-skill/
 ├── .claude-plugin/
 │   ├── plugin.json            # plugin manifest
-│   └── marketplace.json       # marketplace entry
+│   └── marketplace.json       # meta-marketplace: this plugin + superpowers + pwf + caveman
 ├── skills/
 │   ├── memory-discipline/SKILL.md
 │   └── verify-facts/SKILL.md
 ├── hooks/
+│   ├── hooks.json             # declares the self-registering SessionStart hook
 │   └── session-start.js       # prints the guardrail reminder
 ├── lib/
 │   ├── deps.js                # buildCommands() — dependency → npx argv
-│   ├── merge-settings.js      # ensureSessionStartHook() — pure, idempotent
 │   └── reminder.js            # buildReminder() — the reminder text
-├── test/                      # node:test suites (25 tests)
-├── deps.json                  # the four external dependencies
-├── install.js                 # the installer CLI
+├── test/                      # node:test suites (18 tests)
+├── deps.json                  # the two skill-only dependencies
+├── install.js                 # installs find-skills + skill-judge
 ├── INSTALL.md
 └── README.md
 ```
@@ -188,8 +183,8 @@ node --test
 ```
 
 ```text
-ℹ tests 25
-ℹ pass 25
+ℹ tests 18
+ℹ pass 18
 ℹ fail 0
 ```
 
@@ -203,9 +198,9 @@ node install.js --dry-run
 
 ## Uninstall
 
-1. Remove the plugin via your plugin manager (`/plugin`).
-2. Delete the `SessionStart` entry whose command contains `claude-guardrails-sessionstart` from `~/.claude/settings.json`.
-3. Optionally remove the dependency skills you no longer want (`planning-with-files`, `caveman`, `find-skills`, `skill-judge`).
+1. Remove the plugins via your plugin manager (`/plugin`). The SessionStart hook is part of the
+   plugin, so it goes away automatically — no `settings.json` cleanup needed.
+2. Optionally remove the two skills you no longer want (`find-skills`, `skill-judge`).
 
 ---
 

@@ -1,15 +1,35 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-guardrails-skill",
   "owner": {
     "name": "Martin Barja Balseiro",
     "url": "https://github.com/Hanksito"
   },
+  "metadata": {
+    "description": "Guardrails for agent memory, context, and truthfulness — plus the skills it coordinates, installable from one marketplace.",
+    "version": "0.2.0"
+  },
   "plugins": [
     {
       "name": "claude-guardrails-skill",
       "source": "./",
-      "description": "Guardrail pack: memory discipline, fact verification, session-start reminder.",
-      "version": "0.1.0"
+      "description": "Memory discipline, fact verification, and a session-start reminder. Ships its own SessionStart hook.",
+      "version": "0.2.0"
+    },
+    {
+      "name": "superpowers",
+      "source": { "source": "url", "url": "https://github.com/obra/superpowers.git" },
+      "description": "Core method base: TDD, debugging, brainstorming, writing-plans, code review, verification-before-completion."
+    },
+    {
+      "name": "planning-with-files",
+      "source": { "source": "url", "url": "https://github.com/OthmanAdi/planning-with-files.git" },
+      "description": "Live working memory on disk (task_plan/findings/progress); survives context compaction and /clear."
+    },
+    {
+      "name": "caveman",
+      "source": { "source": "url", "url": "https://github.com/JuliusBrussee/caveman.git" },
+      "description": "Terse, low-token communication style (use at lite intensity)."
     }
   ]
 }

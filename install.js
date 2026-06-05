@@ -1,40 +1,18 @@
 'use strict';
 const fs = require('node:fs');
-const os = require('node:os');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { buildCommands } = require('./lib/deps');
-const { ensureSessionStartHook } = require('./lib/merge-settings');
 
-const { MARKER } = require('./lib/merge-settings');
-
-function hookCommand() {
-  // Real absolute path to this install's hook (forward slashes so the same string
-  // works on Windows and POSIX), plus a path-independent marker token so re-runs
-  // are idempotent no matter what the install directory is named. session-start.js
-  // ignores extra argv, so the token is inert at runtime.
-  const abs = path.join(__dirname, 'hooks', 'session-start.js').replace(/\\/g, '/');
-  return `node "${abs}" ${MARKER}`;
-}
-
-function settingsPath() {
-  return path.join(os.homedir(), '.claude', 'settings.json');
-}
-
-function readSettings(file) {
-  try {
-    return JSON.parse(fs.readFileSync(file, 'utf8'));
-  } catch (_e) {
-    return {};
-  }
-}
-
+// Installs the skill-only dependencies that are not available as marketplace plugins
+// (find-skills, skill-judge). The plugins — claude-guardrails-skill, superpowers,
+// planning-with-files, caveman — are installed from the marketplace via /plugin install,
+// and this plugin's SessionStart hook auto-registers through hooks/hooks.json. So this
+// script no longer touches ~/.claude/settings.json.
 function main(argv) {
   const dryRun = argv.includes('--dry-run');
-  process.stdout.write('Note: superpowers is a prerequisite and is NOT installed by this script — install it from its own marketplace (see INSTALL.md).\n');
   const deps = JSON.parse(fs.readFileSync(path.join(__dirname, 'deps.json'), 'utf8'));
   const cmds = buildCommands(deps);
-  const hookCmd = hookCommand();
 
   for (const args of cmds) {
     const printable = 'npx ' + args.join(' ');
@@ -51,19 +29,14 @@ function main(argv) {
     }
   }
 
-  const file = settingsPath();
   if (dryRun) {
-    process.stdout.write(`SessionStart hook -> ${file}\n  ${hookCmd}\n`);
-    return;
+    process.stdout.write('\nThe plugins (claude-guardrails-skill, superpowers, planning-with-files, caveman)\n');
+    process.stdout.write('install from the marketplace — see INSTALL.md.\n');
   }
-  const merged = ensureSessionStartHook(readSettings(file), hookCmd);
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(merged, null, 2) + '\n');
-  process.stdout.write(`Registered SessionStart hook in ${file}\n`);
 }
 
 if (require.main === module) {
   main(process.argv.slice(2));
 }
 
-module.exports = { main, hookCommand, settingsPath };
+module.exports = { main };

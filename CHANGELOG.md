@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] — 2026-06-05
+
+Re-architected installation around a single marketplace. **Breaking** install-flow change.
+
+### Changed
+- **Meta-marketplace.** `.claude-plugin/marketplace.json` now re-lists `superpowers`,
+  `planning-with-files`, and `caveman` (pulled from their own repos, by reference — nothing
+  vendored). One `/plugin marketplace add` exposes everything; `superpowers` no longer needs its
+  own marketplace added separately.
+- **Self-registering hook.** The SessionStart reminder is now declared in `hooks/hooks.json` and
+  wired up by the plugin loader via `${CLAUDE_PLUGIN_ROOT}`. Installing the plugin registers it;
+  uninstalling removes it. No `settings.json` mutation.
+- **Slim installer.** `install.js` now installs only the two skill-only dependencies
+  (`find-skills`, `skill-judge`) via `npx skills add`.
+
+### Removed
+- `lib/merge-settings.js` and its tests — the manual `settings.json` merge and the
+  `claude-guardrails-sessionstart` marker token are obsolete now that the hook self-registers.
+
 ## [0.1.0] — 2026-06-05
 
 First release.
@@ -31,4 +50,5 @@ First release.
 - `superpowers` is a prerequisite and is installed separately (not by `install.js`).
 - 25/25 tests passing (`node --test`).
 
+[0.2.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.1.0

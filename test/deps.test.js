@@ -18,8 +18,8 @@ test('buildCommands rejects dep missing fields', () => {
   assert.throws(() => buildCommands([{ repo: 'x' }]), TypeError);
 });
 
-test('deps.json contains the four external skills', () => {
+test('deps.json contains the two skill-only dependencies', () => {
   const deps = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'deps.json'), 'utf8'));
   const skills = deps.map((d) => d.skill).sort();
-  assert.deepStrictEqual(skills, ['caveman', 'find-skills', 'planning-with-files', 'skill-judge']);
+  assert.deepStrictEqual(skills, ['find-skills', 'skill-judge']);
 });

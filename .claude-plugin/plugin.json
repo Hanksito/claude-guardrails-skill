@@ -1,7 +1,7 @@
 {
   "name": "claude-guardrails-skill",
-  "version": "0.1.0",
-  "description": "Guardrail pack: long-term memory discipline, fact verification, and a session-start reminder. Installs and coordinates planning-with-files, caveman, find-skills, and skill-judge.",
+  "version": "0.2.0",
+  "description": "Guardrail pack: long-term memory discipline, fact verification, and a self-registering session-start reminder. Coordinates superpowers, planning-with-files, caveman, find-skills, and skill-judge.",
   "author": {
     "name": "Martin Barja Balseiro",
     "email": "barjabalseiro@gmail.com",
