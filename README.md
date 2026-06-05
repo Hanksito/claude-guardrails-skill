@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/banner.svg" alt="claude-guardrails-skill — Remember · Stay on track · No bluffing" width="100%">
+
 # 🛡️ claude-guardrails-skill
 
 ### Stop your AI agent from forgetting, drifting, and bluffing.
