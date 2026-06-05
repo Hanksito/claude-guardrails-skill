@@ -6,17 +6,15 @@ const { spawnSync } = require('node:child_process');
 const { buildCommands } = require('./lib/deps');
 const { ensureSessionStartHook } = require('./lib/merge-settings');
 
+const { MARKER } = require('./lib/merge-settings');
+
 function hookCommand() {
-  // Absolute path to this install's hook, normalized to forward slashes so the
-  // idempotency MARKER matches on Windows as well as POSIX.
-  // Replace the directory basename with the package name so the marker path
-  // always contains "claude-guardrails-skill/hooks/session-start.js"
-  // regardless of the actual checkout directory name.
-  const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
-  const pkgName = pkg.name;
-  const parent = path.dirname(__dirname).replace(/\\/g, '/');
-  const abs = `${parent}/${pkgName}/hooks/session-start.js`;
-  return `node "${abs}"`;
+  // Real absolute path to this install's hook (forward slashes so the same string
+  // works on Windows and POSIX), plus a path-independent marker token so re-runs
+  // are idempotent no matter what the install directory is named. session-start.js
+  // ignores extra argv, so the token is inert at runtime.
+  const abs = path.join(__dirname, 'hooks', 'session-start.js').replace(/\\/g, '/');
+  return `node "${abs}" ${MARKER}`;
 }
 
 function settingsPath() {

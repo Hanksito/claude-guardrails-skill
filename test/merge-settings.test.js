@@ -3,7 +3,7 @@ const { test } = require('node:test');
 const assert = require('node:assert');
 const { ensureSessionStartHook } = require('../lib/merge-settings');
 
-const CMD = 'node "/home/u/.claude/plugins/marketplaces/claude-guardrails-skill/hooks/session-start.js"';
+const CMD = 'node "/home/u/.claude/plugins/marketplaces/claude-guardrails-skill/hooks/session-start.js" claude-guardrails-sessionstart';
 
 test('adds SessionStart hook to empty settings', () => {
   const out = ensureSessionStartHook({}, CMD);
@@ -24,10 +24,9 @@ test('preserves existing unrelated SessionStart hooks', () => {
   assert.strictEqual(out.hooks.SessionStart.length, 2);
 });
 
-test('matches by stable substring regardless of absolute prefix', () => {
-  const winCmd = 'node "C:/Users/x/.claude/plugins/marketplaces/claude-guardrails-skill/hooks/session-start.js"';
-  const first = ensureSessionStartHook({}, winCmd);
-  const second = ensureSessionStartHook(first, 'node "D:/elsewhere/claude-guardrails-skill/hooks/session-start.js"');
+test('matches by stable token regardless of the executable path', () => {
+  const first = ensureSessionStartHook({}, 'node "C:/Users/x/skill-agent/hooks/session-start.js" claude-guardrails-sessionstart');
+  const second = ensureSessionStartHook(first, 'node "D:/totally/different/place.js" claude-guardrails-sessionstart');
   assert.strictEqual(second.hooks.SessionStart.length, 1);
 });
 

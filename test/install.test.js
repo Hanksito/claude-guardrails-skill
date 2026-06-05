@@ -21,7 +21,9 @@ test('--dry-run prints every dependency command and the hook command', () => {
   assert.match(res.stdout, /session-start\.js/);
 });
 
-test('--dry-run uses forward slashes in the hook command (marker match on Windows)', () => {
+test('--dry-run hook command uses forward slashes and carries the idempotency marker', () => {
   const res = run(['--dry-run']);
-  assert.match(res.stdout, /claude-guardrails-skill\/hooks\/session-start\.js/);
+  assert.match(res.stdout, /hooks\/session-start\.js/);          // forward-slash path
+  assert.doesNotMatch(res.stdout, /hooks\\session-start\.js/);   // never backslashes
+  assert.match(res.stdout, /claude-guardrails-sessionstart/);    // path-independent marker token
 });
