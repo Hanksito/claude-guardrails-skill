@@ -7,14 +7,14 @@
   },
   "metadata": {
     "description": "Guardrails for agent memory, context, and truthfulness — plus the skills it coordinates, installable from one marketplace.",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "plugins": [
     {
       "name": "claude-guardrails-skill",
       "source": "./",
       "description": "Memory discipline, fact verification, and a session-start reminder. Ships its own SessionStart hook.",
-      "version": "0.2.0"
+      "version": "0.3.0"
     },
     {
       "name": "superpowers",

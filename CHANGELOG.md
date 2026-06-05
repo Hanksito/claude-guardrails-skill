@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] — 2026-06-05
+
+True one-command install.
+
+### Changed
+- **`install.js` now installs everything.** Using the `claude` CLI (verified to support
+  `claude plugin marketplace add` and `claude plugin install`), the installer adds this repo's
+  marketplace and installs the plugins **in order** — `superpowers` → `planning-with-files` →
+  `caveman` → `claude-guardrails-skill` — then installs `find-skills` and `skill-judge` via
+  `npx skills add`. A single `node install.js` sets up the whole stack; `superpowers` no longer
+  needs a manual step.
+- Docs updated to the `git clone … && node install.js` flow, with a manual `/plugin` alternative.
+
+### Notes
+- Requires the `claude` CLI on PATH (always true for Claude Code users) and Node ≥ 18.
+- Still nothing vendored; plugins are pulled from their own repos via the meta-marketplace.
+
 ## [0.2.0] — 2026-06-05
 
 Re-architected installation around a single marketplace. **Breaking** install-flow change.
@@ -50,5 +67,6 @@ First release.
 - `superpowers` is a prerequisite and is installed separately (not by `install.js`).
 - 25/25 tests passing (`node --test`).
 
+[0.3.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.1.0

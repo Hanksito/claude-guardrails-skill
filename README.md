@@ -12,7 +12,7 @@
 ![Node](https://img.shields.io/badge/node-%E2%89%A518-blue)
 ![Runtime deps](https://img.shields.io/badge/runtime%20deps-0-brightgreen)
 ![Platform](https://img.shields.io/badge/platform-win%20%7C%20macOS%20%7C%20linux-lightgrey)
-![Tests](https://img.shields.io/badge/tests-18%20passing-success)
+![Tests](https://img.shields.io/badge/tests-20%20passing-success)
 
 </div>
 
@@ -41,15 +41,15 @@ Three failure modes quietly wreck agentic coding sessions:
 
 **Four coordinated dependencies, installed for you:**
 
-| Skill / Plugin | Role | Installs via |
-|----------------|------|--------------|
-| [`superpowers`](https://github.com/obra/superpowers) | Method base: TDD, debugging, planning, code review, `verification-before-completion`. | marketplace |
-| [`planning-with-files`](https://github.com/OthmanAdi/planning-with-files) | Live working memory on disk — survives context compaction & `/clear`. | marketplace |
-| [`caveman`](https://github.com/JuliusBrussee/caveman) | Terse, low-token communication style (**lite**, always on). | marketplace |
-| [`find-skills`](https://github.com/vercel-labs/skills) | Discover new skills across the ecosystem. | `install.js` |
-| [`skill-judge`](https://github.com/softaworks/agent-toolkit) | Evaluate skills *before* you install them. | `install.js` |
+| Skill / Plugin | Role | How |
+|----------------|------|-----|
+| [`superpowers`](https://github.com/obra/superpowers) | Method base: TDD, debugging, planning, code review, `verification-before-completion`. | plugin |
+| [`planning-with-files`](https://github.com/OthmanAdi/planning-with-files) | Live working memory on disk — survives context compaction & `/clear`. | plugin |
+| [`caveman`](https://github.com/JuliusBrussee/caveman) | Terse, low-token communication style (**lite**, always on). | plugin |
+| [`find-skills`](https://github.com/vercel-labs/skills) | Discover new skills across the ecosystem. | skill |
+| [`skill-judge`](https://github.com/softaworks/agent-toolkit) | Evaluate skills *before* you install them. | skill |
 
-> **One install surface.** `superpowers` and the other plugins are re-listed in this repo's marketplace, so a single `/plugin marketplace add` gives you everything — no separate marketplaces to track.
+> **One command, everything.** `node install.js` installs all of the above (plugins via the `claude` CLI, skills via `npx`) — `superpowers` included, no separate marketplace to track.
 
 ---
 
@@ -79,39 +79,37 @@ The biggest source of agent confusion is *where to write what*. This pack draws 
 
 ## Quick start
 
-Everything installs from **one marketplace** — including `superpowers`, so you never add its marketplace separately.
+**One command installs everything** — superpowers, planning-with-files, caveman, the two skills, and this plugin (hook included).
 
-### 1. Add the marketplace (once)
-
-```text
-/plugin marketplace add https://github.com/Hanksito/claude-guardrails-skill
-```
-
-### 2. Install the plugins from it
-
-```text
-/plugin install claude-guardrails-skill
-/plugin install superpowers
-/plugin install planning-with-files
-/plugin install caveman
-```
-
-Installing `claude-guardrails-skill` brings the two skills **and self-registers its SessionStart reminder hook** — no `settings.json` editing, nothing to wire up.
-
-### 3. Add the two skill-only tools
-
-`find-skills` and `skill-judge` ship as bare skills (not plugins), so they install with the `skills` CLI. From the plugin directory:
+**Requires** [Claude Code](https://claude.com/claude-code) (`claude` on PATH) and [Node.js](https://nodejs.org) ≥ 18.
 
 ```bash
-node install.js          # or: node install.js --dry-run
+git clone https://github.com/Hanksito/claude-guardrails-skill
+cd claude-guardrails-skill
+node install.js
+```
+
+Then **restart Claude Code** so the new plugins and the reminder hook load.
+
+**Preview first — change nothing:**
+
+```bash
+node install.js --dry-run
 ```
 
 ```text
+claude plugin marketplace add https://github.com/Hanksito/claude-guardrails-skill
+claude plugin install superpowers@claude-guardrails-skill
+claude plugin install planning-with-files@claude-guardrails-skill
+claude plugin install caveman@claude-guardrails-skill
+claude plugin install claude-guardrails-skill@claude-guardrails-skill
 npx skills add https://github.com/vercel-labs/skills --skill find-skills
 npx skills add https://github.com/softaworks/agent-toolkit --skill skill-judge
 ```
 
-> 🪶 **Nothing is vendored.** `superpowers`, `planning-with-files`, and `caveman` are *re-listed* in this marketplace and pulled from their own repos — you get one install surface without copying anyone's code.
+Installing `claude-guardrails-skill` brings the two skills **and self-registers its SessionStart reminder hook** — no `settings.json` editing. Prefer to install by hand? See [INSTALL.md](INSTALL.md).
+
+> 🪶 **Nothing is vendored.** `superpowers`, `planning-with-files`, and `caveman` are *re-listed* in this marketplace and pulled from their own repos — one install command, no copied code.
 
 ---
 
@@ -165,9 +163,9 @@ claude-guardrails-skill/
 ├── lib/
 │   ├── deps.js                # buildCommands() — dependency → npx argv
 │   └── reminder.js            # buildReminder() — the reminder text
-├── test/                      # node:test suites (18 tests)
+├── test/                      # node:test suites (20 tests)
 ├── deps.json                  # the two skill-only dependencies
-├── install.js                 # installs find-skills + skill-judge
+├── install.js                 # one command: installs all plugins (claude CLI) + skills (npx)
 ├── INSTALL.md
 └── README.md
 ```
@@ -183,8 +181,8 @@ node --test
 ```
 
 ```text
-ℹ tests 18
-ℹ pass 18
+ℹ tests 20
+ℹ pass 20
 ℹ fail 0
 ```
 
