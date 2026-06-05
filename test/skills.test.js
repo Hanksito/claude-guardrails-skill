@@ -25,3 +25,14 @@ test('memory-discipline names the three memory layers', () => {
   assert.match(body, /MEMORY\.md/);
   assert.match(body, /verify-facts/);
 });
+
+test('verify-facts has name + description frontmatter', () => {
+  const fm = frontmatter(path.join(root, 'verify-facts', 'SKILL.md'));
+  assert.match(fm, /^name:\s*verify-facts\s*$/m);
+  assert.match(fm, /^description:\s*\S/m);
+});
+
+test('verify-facts distinguishes itself from verification-before-completion', () => {
+  const body = fs.readFileSync(path.join(root, 'verify-facts', 'SKILL.md'), 'utf8');
+  assert.match(body, /verification-before-completion/);
+});
