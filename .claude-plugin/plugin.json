@@ -1,0 +1,12 @@
+{
+  "name": "claude-guardrails-skill",
+  "version": "0.1.0",
+  "description": "Guardrail pack: long-term memory discipline, fact verification, and a session-start reminder. Installs and coordinates planning-with-files, caveman, find-skills, and skill-judge.",
+  "author": {
+    "name": "Martin Barja Balseiro",
+    "email": "barjabalseiro@gmail.com",
+    "url": "https://github.com/Hanksito"
+  },
+  "license": "MIT",
+  "keywords": ["memory", "context", "verification", "guardrails", "agent-skills"]
+}

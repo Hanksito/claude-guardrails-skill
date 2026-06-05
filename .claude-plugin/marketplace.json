@@ -1,0 +1,15 @@
+{
+  "name": "claude-guardrails-skill",
+  "owner": {
+    "name": "Martin Barja Balseiro",
+    "url": "https://github.com/Hanksito"
+  },
+  "plugins": [
+    {
+      "name": "claude-guardrails-skill",
+      "source": "./",
+      "description": "Guardrail pack: memory discipline, fact verification, session-start reminder.",
+      "version": "0.1.0"
+    }
+  ]
+}

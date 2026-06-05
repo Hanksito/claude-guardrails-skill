@@ -1,0 +1,9 @@
+{
+  "name": "claude-guardrails-skill",
+  "version": "0.1.0",
+  "description": "Guardrail pack: long-term memory discipline, fact verification, and a session-start reminder for Claude.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test"
+  }
+}
