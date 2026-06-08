@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] — 2026-06-08
+
+`npm i` now installs the whole stack, not just the bootstrapper.
+
+### Added
+- **`postinstall` hook.** `npm i claude-guardrails-skill` (and `npm i -g`) now runs the installer
+  automatically — previously it only dropped the installer into `node_modules` and did nothing.
+- Three guards make that safe:
+  - **Dev-checkout guard** — the automatic postinstall skips when run from a source checkout
+    (detected by `test/`/`skills/`, which the npm tarball never ships), so cloning and running
+    `npm install` for development never tries to install the stack.
+  - **Soft mode** — a missing `claude` CLI (or any failed step) during postinstall warns and
+    exits 0 instead of failing the whole `npm i`.
+  - **Dedup marker** — collapses the `npx` double-fire (postinstall + bin run, seconds apart)
+    into a single install via a short-lived timestamp marker; `--force` overrides.
+- `test/postinstall.test.js` covers all three; the README is now behavior-focused (no dependency
+  names) and a test guards that. 29 tests total.
+
 ## [0.4.0] — 2026-06-05
 
 Publishable to npm for a no-clone install.
@@ -78,6 +96,7 @@ First release.
 - `superpowers` is a prerequisite and is installed separately (not by `install.js`).
 - 25/25 tests passing (`node --test`).
 
+[0.5.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.5.0
 [0.4.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.4.0
 [0.3.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Hanksito/claude-guardrails-skill/releases/tag/v0.2.0

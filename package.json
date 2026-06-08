@@ -1,6 +1,6 @@
 {
   "name": "claude-guardrails-skill",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "One-command installer for the claude-guardrails-skill pack: long-term memory discipline, fact verification, a self-registering session-start reminder, and the skills it coordinates.",
   "bin": {
     "claude-guardrails-skill": "install.js"
@@ -16,6 +16,7 @@
   },
   "scripts": {
     "test": "node --test",
+    "postinstall": "node install.js --postinstall",
     "prepublishOnly": "node --test"
   },
   "repository": {
